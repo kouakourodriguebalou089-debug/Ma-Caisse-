@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101b35">
+  <meta name="description" content="Gérez vos revenus, dépenses, provisions et objectifs d'épargne.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Ma Caisse — Budget personnel</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">₣</div><div><b>Ma Caisse</b><small>Votre budget, maîtrisé.</small></div></div>
+      <nav>
+        <button class="nav-item active" data-page="overview">▦ <span>Vue d'ensemble</span></button>
+        <button class="nav-item" data-page="transactions">↕ <span>Transactions</span></button>
+        <button class="nav-item" data-page="budgets">◷ <span>Budgets & provisions</span></button>
+        <button class="nav-item" data-page="savings">◎ <span>Épargne & objectifs</span></button>
+      </nav>
+      <div class="sidebar-note"><span class="dot"></span> Données enregistrées sur cet appareil</div>
+      <div class="side-footer">MA CAISSE <span>•</span> FCFA</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">ESPACE PERSONNEL</div><h1 id="page-title">Vue d'ensemble</h1></div>
+        <div class="top-actions"><button class="upgrade-btn" id="open-plans">Passer Premium <span>↗</span></button><div class="month-picker"><button id="prev-month" aria-label="Mois précédent">‹</button><span id="month-label"></span><button id="next-month" aria-label="Mois suivant">›</button></div><button class="avatar" title="Profil local">M</button></div>
+      </header>
+
+      <section id="overview-page" class="page active">
+        <div class="welcome-row"><div><h2>Bonjour 👋</h2><p>Voici où en sont vos finances ce mois-ci.</p></div><button class="primary" id="quick-add">＋ Ajouter une opération</button></div>
+        <div class="stats-grid">
+          <article class="stat-card balance-card"><div class="stat-head"><span>Solde disponible estimé</span><span class="stat-icon">◈</span></div><div class="stat-value" id="available">0 FCFA</div><div class="stat-foot"><span class="mini-dot"></span> Revenus − dépenses − provisions</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Revenus du mois</span><span class="stat-icon green">↗</span></div><div class="stat-value" id="income-total">0 FCFA</div><div class="stat-foot">Toutes sources confondues</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Dépenses réalisées</span><span class="stat-icon orange">↘</span></div><div class="stat-value" id="expense-total">0 FCFA</div><div class="stat-foot" id="expense-foot">Dépenses enregistrées</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Provisions prévues</span><span class="stat-icon purple">▤</span></div><div class="stat-value" id="reserve-total">0 FCFA</div><div class="stat-foot">Montants mis de côté</div></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel spending-panel"><div class="panel-heading"><div><h3>Répartition des dépenses</h3><p>Vos sorties d'argent par catégorie</p></div><span class="period-tag">CE MOIS</span></div><div class="chart-wrap"><canvas id="donut" width="320" height="230"></canvas><div id="chart-legend" class="legend"></div></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Budget du mois</h3><p>Prévu vs déjà dépensé</p></div><button class="text-btn" data-goto="budgets">Gérer →</button></div><div id="budget-summary" class="budget-summary"></div></article>
+        </div>
+        <div class="content-grid lower-grid">
+          <article class="panel"><div class="panel-heading"><div><h3>Dernières opérations</h3><p>Vos mouvements récents</p></div><button class="text-btn" data-goto="transactions">Tout voir →</button></div><div id="recent-list" class="transaction-list"></div></article>
+          <article class="panel insight-panel"><div class="insight-icon">✦</div><h3>Votre point financier</h3><p id="insight">Ajoutez vos revenus et dépenses pour obtenir votre bilan du mois.</p><div class="insight-rule"></div><div class="insight-bottom"><span>ASTUCE DU MOIS</span><b>Provisionnez d'abord, dépensez ensuite.</b></div></article>
+        </div>
+      </section>
+
+      <section id="transactions-page" class="page">
+        <div class="section-intro"><div><h2>Vos transactions</h2><p>Suivez chaque entrée et chaque sortie d'argent.</p></div><div class="action-group"><button class="secondary" id="export-csv">↓ Export CSV</button><button class="primary" id="add-transaction">＋ Nouvelle opération</button></div></div>
+        <div class="filter-row"><div class="filter-tabs"><button class="filter active" data-filter="all">Tout</button><button class="filter" data-filter="income">Revenus</button><button class="filter" data-filter="expense">Dépenses</button><button class="filter" data-filter="reserve">Provisions</button></div><input id="search-transactions" class="search" placeholder="⌕ Rechercher..." /></div>
+        <div class="panel table-panel"><div id="all-transactions" class="transaction-list"></div></div>
+      </section>
+
+      <section id="budgets-page" class="page">
+        <div class="section-intro"><div><h2>Budgets & provisions</h2><p>Donnez une limite à vos dépenses et préparez vos charges à l'avance.</p></div><button class="primary" id="edit-budgets">＋ Ajouter une catégorie</button></div>
+        <div class="panel budget-panel"><div class="panel-heading"><div><h3>Mes enveloppes mensuelles</h3><p>Le montant prévu pour chaque poste</p></div><span class="period-tag">FCFA</span></div><div id="budget-list"></div></div>
+        <div class="callout"><span>💡</span><div><b>Une provision, c'est de l'argent réservé.</b><p>Exemple : mettez de côté chaque mois une somme pour les frais scolaires, les réparations ou les dépenses annuelles.</p></div></div>
+      </section>
+
+      <section id="savings-page" class="page">
+        <div class="section-intro"><div><h2>Épargne & objectifs</h2><p>Transformez vos projets en objectifs concrets.</p></div><button class="primary" id="add-goal">＋ Nouvel objectif</button></div>
+        <div class="goal-grid" id="goals-list"></div>
+      </section>
+      <dialog id="plans-dialog" class="modal plans-modal">
+    <div class="modal-head"><div><span class="eyebrow">CHOISISSEZ VOTRE FORMULE</span><h2>Un budget clair, à votre rythme.</h2></div><button type="button" class="close" data-close="plans-dialog">×</button></div>
+    <p class="plan-subtitle">Commencez gratuitement. Passez à Premium lorsque vous avez besoin d'outils avancés.</p>
+    <div class="plans-grid">
+      <article class="plan-card"><span class="plan-label">ESSENTIEL</span><h3>Gratuit</h3><p class="plan-price">0 <small>FCFA</small></p><ul><li>Revenus et dépenses</li><li>Budgets et provisions</li><li>Suivi du solde mensuel</li><li>2 objectifs d'épargne</li><li>Stockage sur cet appareil</li></ul><button class="secondary plan-current" id="choose-free">Formule de base</button></article>
+      <article class="plan-card premium-plan"><span class="plan-label">POUR ALLER PLUS LOIN</span><h3>Premium</h3><p class="plan-price">À définir <small>/ mois</small></p><ul><li>Tout le plan Gratuit</li><li>Objectifs d'épargne illimités</li><li>Export CSV de vos opérations</li><li>Rapports mensuels détaillés</li><li>Fonctions avancées à venir</li></ul><button class="primary" id="activate-premium">Tester Premium</button></article>
+    </div>
+    <p class="plan-disclaimer">Version de démonstration : aucun paiement n'est demandé ni traité. L'activation Premium est simulée localement. Avant commercialisation, il faudra connecter un serveur, des comptes sécurisés et un prestataire de paiement.</p>
+  </dialog>
+  <footer class="mobile-footer">Ma Caisse · Vos finances, en toute simplicité</footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav">
+    <button class="active" data-page="overview">▦<small>Accueil</small></button><button data-page="transactions">↕<small>Opérations</small></button><button data-page="budgets">◷<small>Budgets</small></button><button data-page="savings">◎<small>Épargne</small></button>
+  </nav>
+
+  <dialog id="transaction-dialog" class="modal">
+    <form id="transaction-form" method="dialog">
+      <div class="modal-head"><div><span class="eyebrow">NOUVELLE OPÉRATION</span><h2 id="transaction-modal-title">Ajouter une opération</h2></div><button type="button" class="close" data-close="transaction-dialog">×</button></div>
+      <div class="type-switch"><button type="button" class="type-btn active" data-type="expense">Dépense</button><button type="button" class="type-btn" data-type="income">Revenu</button><button type="button" class="type-btn" data-type="reserve">Provision</button></div>
+      <input type="hidden" id="tx-type" value="expense">
+      <label>Libellé<input id="tx-title" required placeholder="Ex. Courses du marché"></label>
+      <div class="form-row"><label>Montant (FCFA)<input id="tx-amount" type="number" min="1" step="1" required placeholder="25000"></label><label>Date<input id="tx-date" type="date" required></label></div>
+      <label>Catégorie<select id="tx-category"></select></label>
+      <label>Source / note <input id="tx-note" placeholder="Facultatif"></label>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="transaction-dialog">Annuler</button><button class="primary" type="submit">Enregistrer</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="budget-dialog" class="modal">
+    <form id="budget-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">ORGANISATION</span><h2>Ajouter une enveloppe</h2></div><button type="button" class="close" data-close="budget-dialog">×</button></div>
+      <label>Nom de la catégorie<input id="budget-name" required placeholder="Ex. Santé"></label><label>Budget mensuel (FCFA)<input id="budget-amount" type="number" min="0" required placeholder="30000"></label>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="budget-dialog">Annuler</button><button class="primary">Ajouter</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="goal-dialog" class="modal">
+    <form id="goal-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">PROJET PERSONNEL</span><h2>Créer un objectif</h2></div><button type="button" class="close" data-close="goal-dialog">×</button></div>
+      <label>Nom de l'objectif<input id="goal-name" required placeholder="Ex. Fonds d'urgence"></label><div class="form-row"><label>Montant cible<input id="goal-target" type="number" min="1" required placeholder="200000"></label><label>Déjà épargné<input id="goal-saved" type="number" min="0" value="0"></label></div>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="goal-dialog">Annuler</button><button class="primary">Créer</button></div>
+    </form>
+  </dialog>
+  <div id="toast" role="status" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
